@@ -1,69 +1,20 @@
 #!/usr/bin/python3
 
-import libvirt
-from pyroute2 import IPRoute
 
-list_interfaces = ['vnet0', 'vnet1']
-ip = IPRoute()
+from get_vf_mac_addresses import get_vf_mac_addresses_for_interfaces
+from get_names_of_vms import get_names_of_vms_from_host_machine
 
-list_index_interfaces = []
-for interface in list_interfaces:
-    index_interface = ip.link_lookup(ifname=interface)[0]
-    list_index_interfaces.append(index_interface)
+host_uri = 'qemu:///system'
+# remoute_uri = 'qemu+ssh://ubuntu@192.168.14.136/system'
+host_list_interfaces = ['enp3s0', 'vnet0', 'vnet1']
 
-
-vf_mac_addresses = [x.get_attr('IFLA_ADDRESS') for x in ip.get_links(*list_index_interfaces)]
-print(vf_mac_addresses)
+get_vf_mac_addresses_for_interfaces(host_list_interfaces)
+get_names_of_vms_from_host_machine(host_uri)
 
 
-conn = libvirt.open('qemu:///system')
 
 
-if conn is None:
-    print('Failed to open connection to qemu:///system')
-    exit(1)
 
-virtual_machines = conn.listAllDomains(0)
 
-if len(virtual_machines) != 0:
-    list_of_vm1 = {}
-    for virtual_machine in virtual_machines:
-        dom = conn.lookupByName(virtual_machine.name())
-        ifaces = dom.interfaceAddresses(libvirt.VIR_DOMAIN_INTERFACE_ADDRESSES_SRC_LEASE)
-        for (name, val) in ifaces.iteritems():
-            if val['addrs']:
-                for ipaddr in val['addrs']:
-                    if ipaddr['type'] == libvirt.VIR_IP_ADDR_TYPE_IPV4:
-                        list_of_vm1[virtual_machine.name()] = {'ip': ipaddr['addr'], 'mac': val['hwaddr']}
-else:
-    print('  None')
-print(list_of_vm1)
 
-conn.close()
-exit(0)
-
-# conn = libvirt.open('qemu+ssh:///192.168.226.4/system')
-#
-# if conn is None:
-#     print('Failed to open connection to qemu:///system')
-#     exit(1)
-#
-# virtual_machines = conn.listAllDomains(0)
-#
-# if len(virtual_machines) != 0:
-#     list_of_vm2 = {}
-#     for virtual_machine in virtual_machines:
-#         dom = conn.lookupByName(virtual_machine.name())
-#         ifaces = dom.interfaceAddresses(libvirt.VIR_DOMAIN_INTERFACE_ADDRESSES_SRC_LEASE)
-#         for (name, val) in ifaces.iteritems():
-#             if val['addrs']:
-#                 for ipaddr in val['addrs']:
-#                     if ipaddr['type'] == libvirt.VIR_IP_ADDR_TYPE_IPV4:
-#                         list_of_vm2[virtual_machine.name()] = {'ip': ipaddr['addr'], 'mac': val['hwaddr']}
-# else:
-#     print('  None')
-# print(list_of_vm2)
-#
-# conn.close()
-# exit(0)
 
