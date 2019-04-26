@@ -6,7 +6,7 @@ import libvirt
 def get_names_of_vms_from_host_machine(uri):
     conn = libvirt.open(uri)
     if conn is None:
-        print('Failed to open connection to qemu:///system')
+        print('Failed to open connection to' + uri)
         exit(1)
     virtual_machines = conn.listAllDomains(0)
 
@@ -19,7 +19,7 @@ def get_names_of_vms_from_host_machine(uri):
                 if val['addrs']:
                     for ipaddr in val['addrs']:
                         if ipaddr['type'] == libvirt.VIR_IP_ADDR_TYPE_IPV4:
-                            list_of_vm1[virtual_machine.name()] = {'ip': ipaddr['addr'], 'mac': val['hwaddr']}
+                            list_of_vm1[virtual_machine.name()] = {'ip': ipaddr['addr'], 'mac': val['hwaddr'], 'interface': None}
         return list_of_vm1
     else:
         print('  None')
