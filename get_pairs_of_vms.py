@@ -16,4 +16,5 @@ vms_with_host2_interfaces = {'ubuntu18.04-1': {'ip': '192.168.14.147', 'mac': '5
 def get_pair_of_vms(vms_with_host1_interfaces, vms_with_host2_interfaces):
     for vm1 in vms_with_host1_interfaces:
         for vm2 in vms_with_host2_interfaces:
-            if
+            if ((vms_with_host1_interfaces[vm1][vms_with_host1_interfaces] == 'enp1s0' & vms_with_host2_interfaces[vm2][vms_with_host2_interfaces] == 'enp8s0') | \
+                    (vms_with_host1_interfaces[vm1][vms_with_host1_interfaces] == 'enp2s0' and vms_with_host2_interfaces[vm2][vms_with_host2_interfaces] == 'enp6s0'))
