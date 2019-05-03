@@ -1,10 +1,11 @@
 #!/usr/bin/python3
-
+import uuid
 
 from get_vf_mac_addresses import get_vf_mac_addresses_for_interfaces
 from get_names_of_vms import get_names_of_vms_from_host_machine
 from sort_vms_to_physical_interfaces import sort_vms_to_physical_interfaces
 from get_pairs_of_vms import get_pairs_of_vms
+from generate_yaml_for_shaker import generate_yaml_for_shaker
 
 host1_uri = 'qemu:///system'
 host2_uri = 'qemu+ssh://ubuntu@192.168.14.136/system'
@@ -23,7 +24,9 @@ vms_name_host2 = get_names_of_vms_from_host_machine(host2_uri)
 vms_with_host1_interfaces = sort_vms_to_physical_interfaces(vf_mac_addresses_host1, vms_name_host1)
 vms_with_host2_interfaces = sort_vms_to_physical_interfaces(vf_mac_addresses_host2, vms_name_host2)
 
-get_pairs_of_vms(vms_with_host1_interfaces, vms_with_host2_interfaces, connections)
+for item in get_pairs_of_vms(vms_with_host1_interfaces, vms_with_host2_interfaces, connections):
+    generate_yaml_for_shaker(item)
+
 
 
 
