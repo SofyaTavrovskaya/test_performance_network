@@ -1,11 +1,11 @@
 deployment:
   agents:
   - id: a-001
-    ip: 192.168.14.134
+    ip:
     mode: master
     slave_id: a-002
   - id: a-002
-    ip: 192.168.14.145
+    ip:
     master_id: a-001
     mode: slave
 description: In this scenario Shaker runs tests on pre-deployed pair of static agents.
